@@ -1,19 +1,14 @@
-
-const webpack = require('webpack');
-const path = require('path')
-
-const fs = require('fs');
+const path = require('path');
 const TerserPlugin = require("terser-webpack-plugin");
-
 
 module.exports = {
 	entry: path.resolve(__dirname, './main.js'),
-	mode: 'production',
+	mode: 'production', // change to development and it works
 	devtool: 'source-map',
 	optimization: {
 		minimizer: [
 			new TerserPlugin({
-				minify: TerserPlugin.uglifyJsMinify,
+				minify: TerserPlugin.uglifyJsMinify, // comment out and it will work
 			})
 		]
 	},
@@ -23,7 +18,6 @@ module.exports = {
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				use: {
-
 					loader: 'babel-loader',
 					options: {
 						presets: ['@babel/preset-react'],
@@ -31,45 +25,19 @@ module.exports = {
 							'@babel/plugin-syntax-jsx',
 						]
 					}
-
-
 				}
-			},
-			{
-				test: /\.css$/,
-				use: ['style-loader', 'css-loader']
-			},
-			{
-				test: /\.s[ac]ss$/i,
-				use: ['style-loader', 'css-loader', 'sass-loader']
-			},
-			{
-				test: /\.tsx?$/,
-				use: 'ts-loader',
-				exclude: /node_modules/,
-			},
-			{
-				test: /\.tsx?$/,
-				use: 'ts-loader',
-				include: /node_modules\/libportal/,
-			},
-			{
-				test: /\.html$/i,
-				type: "asset/resource",
 			}
 		],
-	},
-	resolve: {
-		extensions: ['.js', '.jsx'],
-		alias: {
-			react: path.resolve('./node_modules/react'),
-			"react-dom": path.resolve('./node_modules/react-dom'),
-			"react-router": path.resolve('./node_modules/react-router')
-		}
 	},
 
 	output: {
 		path: path.resolve(__dirname, './public'),
 		filename: 'panel.[name].js',
+	},
+	devServer: {
+		static: {
+			directory: path.join(__dirname, 'public')
+		},
+		port: 9000
 	}
 };
